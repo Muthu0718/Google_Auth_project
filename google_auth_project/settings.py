@@ -76,16 +76,13 @@ AUTHENTICATION_BACKENDS = [
 
 load_dotenv()  # Load environment variables from .env file
 
-ALLOWED_HOSTS = [
-    "google-auth-project-pkhu.onrender.com",  # Your Render domain
-    "127.0.0.1",
-    "localhost",
-]
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
 SECRET_KEY = os.getenv("SECRET_KEY", "your-default-secret-key")
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
-
+ALLOWED_HOSTS = os.getenv(
+    "ALLOWED_HOSTS",
+    "127.0.0.1,localhost,google-auth-project-pkhu.onrender.com"
+).split(",")
 # Google OAuth
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv("GOOGLE_CLIENT_ID")  
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
