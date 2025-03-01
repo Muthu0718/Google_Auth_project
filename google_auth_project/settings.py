@@ -79,14 +79,20 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend', 
 ]
 
-load_dotenv()
+load_dotenv()  # Load environment variables from .env file
 
+DEBUG = os.getenv("DEBUG", "False") == "True"
+SECRET_KEY = os.getenv("SECRET_KEY", "your-default-secret-key")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
+# Google OAuth
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv("GOOGLE_CLIENT_ID")  
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = "http://127.0.0.1:8000/auth/complete/google-oauth2/"
-GOOGLE_DRIVE_SCOPES = ['https://www.googleapis.com/auth/drive.file']
-GOOGLE_DRIVE_REDIRECT_URI = "http://127.0.0.1:8000/auth/drive/callback/"
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
+
+# Google Drive
+GOOGLE_DRIVE_SCOPES = os.getenv("GOOGLE_DRIVE_SCOPES").split(",")
+GOOGLE_DRIVE_REDIRECT_URI = os.getenv("GOOGLE_DRIVE_REDIRECT_URI")
 
 
 LOGIN_URL = 'login'
