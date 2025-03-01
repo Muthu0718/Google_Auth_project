@@ -4,11 +4,6 @@ from dotenv import load_dotenv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'vC1qWz7WROuk_vIcVfQTnEnlYheb2oNe84c4NIsh93BeGpMz1gubFWCHB-XJvjlkJmA'
-
-DEBUG = True  
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
