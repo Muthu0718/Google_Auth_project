@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Room</title>
+    <script>
+        const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/");
+
+        chatSocket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            const chatLog = document.getElementById("chat-log");
+            chatLog.innerHTML += `<p><strong>${data.sender}:</strong> ${data.message}</p>`;
+        };
+
+        function sendMessage() {
+            const messageInput = document.getElementById("message-input");
+            const message = messageInput.value;
+            chatSocket.send(JSON.stringify({ "message": message, "sender": "User" }));
+            messageInput.value = "";
+        }
+    </script>
+</head>
+<body>
+    <h2>Chat Room</h2>
+    <div id="chat-log"></div>
+    <input type="text" id="message-input">
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>
