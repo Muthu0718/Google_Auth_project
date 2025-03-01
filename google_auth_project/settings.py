@@ -75,6 +75,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 load_dotenv()  # Load environment variables from .env file
+PORT = os.getenv("PORT", "10000")
 
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
