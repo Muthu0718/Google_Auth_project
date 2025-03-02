@@ -14,6 +14,7 @@ from django.urls import reverse
 from googleapiclient.http import MediaIoBaseDownload
 import io
 from django.http import HttpResponse, JsonResponse
+import json
 
 
 def save_google_credentials(request, credentials):
@@ -29,19 +30,36 @@ def save_google_credentials(request, credentials):
 
 def google_auth_callback(request):
     """Handle Google OAuth callback after login"""
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        'client_secret.json', 
-        scopes=['https://www.googleapis.com/auth/drive.file']
-    )
-    flow.redirect_uri = "http://127.0.0.1:8000/google/callback/"
-    
-    authorization_response = request.build_absolute_uri()
-    flow.fetch_token(authorization_response=authorization_response)
 
-    credentials = flow.credentials  
-    save_google_credentials(request, credentials) 
+    # Load credentials from the environment variable
+    google_credentials_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
 
-    return redirect('/drive/upload/')
+    if not google_credentials_json:
+        print("Error: GOOGLE_CREDENTIALS_JSON is not set.")
+        return redirect('/login?error=missing_credentials')
+
+    try:
+        credentials_dict = json.loads(google_credentials_json)  # Parse JSON string
+
+        flow = Flow.from_client_config(
+            credentials_dict,
+            scopes=['https://www.googleapis.com/auth/drive.file'],
+            redirect_uri=os.getenv("GOOGLE_DRIVE_REDIRECT_URI", "https://your-app.com/auth/drive/callback/")
+        )
+
+        authorization_response = request.build_absolute_uri()
+        flow.fetch_token(authorization_response=authorization_response)
+
+        credentials = flow.credentials  # Get the access token
+
+        # Save credentials securely (implement this function)
+        save_google_credentials(request, credentials)
+
+        return redirect('/drive/upload/')
+
+    except Exception as e:
+        print(f"OAuth Error: {str(e)}")
+        return redirect('/login?error=auth_failed')
 
 
 
