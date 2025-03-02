@@ -29,7 +29,7 @@ def save_google_credentials(request, credentials):
     }
 
 def google_auth_callback(request):
-    """Handle Google OAuth callback after login"""
+    
 
     # Load credentials from the environment variable
     google_credentials_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
