@@ -65,19 +65,34 @@ def login_view(request):
     return redirect("/auth/login/google-oauth2/")
 
 def google_drive_auth(request):
-    flow = Flow.from_client_secrets_file(
-        'credentials.json',
-        scopes=['https://www.googleapis.com/auth/drive.file'],
-        redirect_uri="http://127.0.0.1:8000/auth/drive/callback/"  
+    flow = Flow.from_client_config(
+        {
+            "web": {
+                "client_id": settings.GOOGLE_CLIENT_ID,
+                "client_secret": settings.GOOGLE_CLIENT_SECRET,
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+            }
+        },
+        scopes=settings.GOOGLE_DRIVE_SCOPES,
+        redirect_uri=settings.GOOGLE_REDIRECT_URI,
     )
+
     auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline')
     return redirect(auth_url)
 
 def google_drive_callback(request):
-    flow = Flow.from_client_secrets_file(
-        'credentials.json',
+    flow = Flow.from_client_config(
+        {
+            "web": {
+                "client_id": settings.GOOGLE_CLIENT_ID,
+                "client_secret": settings.GOOGLE_CLIENT_SECRET,
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+            }
+        },
         scopes=settings.GOOGLE_DRIVE_SCOPES,
-        redirect_uri='http://127.0.0.1:8000/auth/drive/callback/'
+        redirect_uri=settings.GOOGLE_REDIRECT_URI,
     )
     flow.fetch_token(code=request.GET.get('code'))
 
